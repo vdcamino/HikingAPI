@@ -10,7 +10,8 @@ namespace HikingAPI.Models
         [Required]
         public string Description { get; set; }
         public Priority Priority { get; set; }
-        public IssueType Type { get; set; }
+        public Location starting_point { get; set; }
+        public Location end_point { get; set; }
         public DateTime Created { get; set; }
         public DateTime? Completed { get; set; }
     }
@@ -20,8 +21,5 @@ namespace HikingAPI.Models
         Low, Medium, High
     }
 
-    public enum IssueType
-    {
-        Feature, Bug, Documentation
-    }
+   
 }
