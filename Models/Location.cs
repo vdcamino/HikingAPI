@@ -4,9 +4,8 @@ namespace HikingAPI.Models
 {
     public class Location
     {
+        public int Id { get; set; }
         public float latitude { get; set; }
-        [Required]
         public float longitude { get; set; }
-        [Required]
     }
 }
