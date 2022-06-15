@@ -8,9 +8,12 @@ namespace HikingAPI.Data
     public class HikingDbContext : DbContext
     {
         public HikingDbContext(DbContextOptions<HikingDbContext> options) : base(options) { }
-
+        // Make sure that an incremental ID is created 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.UseSerialColumns();
+        }
         public DbSet<Hiking> Hikes { get; set; }
         public DbSet<Location> Locations { get; set;}
-
     }
 }
