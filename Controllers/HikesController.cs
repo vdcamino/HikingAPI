@@ -21,6 +21,20 @@ namespace HikingAPI.Controllers
             _context = context;
         }
 
+        // Function that returns a list of all the hike titles in the database
+        [Route("api/Hike/gethikenames")]
+        [Route("api/Hike/gethikenames/{userId:int}/{age:int}")]
+        [HttpGet]
+        public List<string> GetHikeNames()
+        {
+            List<string> output = new List<string>();
+            foreach (var hike in _context.Hikes)
+            {
+                output.Add(hike.Title);
+            }
+            return output;
+        }
+
         // GET: api/Hikes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Hiking>>> GetHikes()
