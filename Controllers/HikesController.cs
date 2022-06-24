@@ -10,8 +10,8 @@ using HikingAPI.Models;
 
 namespace HikingAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("hikes")]
     public class HikesController : ControllerBase
     {
         private readonly HikingDbContext _context;
@@ -21,16 +21,16 @@ namespace HikingAPI.Controllers
             _context = context;
         }
 
-        // Function that returns a list of all the hike titles in the database
-        [Route("api/Hike/gethikenames")]
-        [Route("api/Hike/gethikenames/{userId:int}/{age:int}")]
-        [HttpGet]
-        public List<string> GetHikeNames()
+        // Function that returns a list of all the hikes near to a given city 
+        // GET /hikes/{city}
+        [HttpGet("{city}")]
+        public List<Hiking> GetHikesFromCity(string city)
         {
-            List<string> output = new List<string>();
+            List<Hiking> output = new List<Hiking>();
             foreach (var hike in _context.Hikes)
             {
-                output.Add(hike.Title);
+                if (hike.City == city)
+                output.Add(hike);
             }
             return output;
         }

@@ -3,7 +3,7 @@
 namespace HikingAPI.Models
 {
     /// <summary>
-    /// Represents one specific  hike 
+    /// Represents one specific hike 
     /// </summary>
     public class Hiking
     {
@@ -38,13 +38,9 @@ namespace HikingAPI.Models
         /// </summary>
         public string Description { get; set; }
         /// <summary>
-        /// Starting point of the hike given by a Location object
+        /// City near the hike 
         /// </summary>
-        public Location starting_point { get; set; }
-        /// <summary>
-        /// End point of the hike given by a Location object
-        /// </summary>
-        public Location end_point { get; set; }
+        public string City { get; set; }
         
     }   
 }
