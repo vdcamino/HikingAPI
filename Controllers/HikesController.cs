@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HikingAPI.Data;
 using HikingAPI.Models;
+using HikingAPI.DTOs;
 
 namespace HikingAPI.Controllers
 {
@@ -21,39 +22,31 @@ namespace HikingAPI.Controllers
             _context = context;
         }
 
-        // Function that returns a list of all the hikes near to a given city 
-        // GET /hikes/{city}
-        [HttpGet("{city}")]
-        public List<Hiking> GetHikesFromCity(string city)
-        {
-            List<Hiking> output = new List<Hiking>();
-            foreach (var hike in _context.Hikes)
-            {
-                if (hike.City == city)
-                output.Add(hike);
-            }
-            return output;
-        }
-
-        // GET: api/Hikes
+        // GET /items
+        // Function that returns all the hikes or a list of hikes near to a given city 
+        // Should improve performance through resource filtering IActionFilter, IFilter --> https://www.youtube.com/watch?v=Zc9xyOgl8k4&ab_channel=NickChapsas / https://www.youtube.com/watch?v=mKM6FbxMGI8&ab_channel=RahulNath
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Hiking>>> GetHikes()
+        public async Task<IEnumerable<Hiking>> GetItemsAsync([FromQuery] string? city = null)
         {
-          if (_context.Hikes == null)
-          {
-              return NotFound();
-          }
-            return await _context.Hikes.ToListAsync();
+            var hikes = await _context.Hikes.ToListAsync();
+
+            if (!string.IsNullOrWhiteSpace(city))
+            {
+                hikes = hikes.Where(hikes => hikes.City.Contains(city, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            return hikes;
         }
 
-        // GET: api/Hikes/5
+        // Function that returns a single hike based on its Id
+        // GET: /hikes/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<Hiking>> GetHiking(int id)
         {
-          if (_context.Hikes == null)
-          {
-              return NotFound();
-          }
+            if (_context.Hikes == null)
+            {
+                return NotFound();
+            }
             var hiking = await _context.Hikes.FindAsync(id);
 
             if (hiking == null)
@@ -64,8 +57,7 @@ namespace HikingAPI.Controllers
             return hiking;
         }
 
-        // PUT: api/Hikes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: /hikes/{id}
         [HttpPut("{id}")]
         public async Task<IActionResult> PutHiking(int id, Hiking hiking)
         {
@@ -95,8 +87,7 @@ namespace HikingAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Hikes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: /hikes
         [HttpPost]
         public async Task<ActionResult<Hiking>> PostHiking(Hiking hiking)
         {
@@ -110,7 +101,7 @@ namespace HikingAPI.Controllers
             return CreatedAtAction("GetHiking", new { id = hiking.ID }, hiking);
         }
 
-        // DELETE: api/Hikes/5
+        // DELETE: /hikes/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHiking(int id)
         {
